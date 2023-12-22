@@ -8,5 +8,4 @@ pydantic_core==2.14.5
 pypdf==3.17.3
 SpeechRecognition==3.10.1
 gTTS==2.5.0
-portaudio
-PyAudio==0.2.14
+pyaudio==0.2.14

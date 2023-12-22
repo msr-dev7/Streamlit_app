@@ -18,12 +18,22 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
+#class CustomModeration(OpenAIModerationChain):
+#        def _moderate(self, text: str, results: dict) -> str:
+#            if results["flagged"]:
+#                error_str = f'Moderação: A mensagem "{text}" não é apropriada. Tente novamente com outra mensagem.'
+#                return error_str
+#            return ""
+
 class CustomModeration(OpenAIModerationChain):
-        def _moderate(self, text: str, results: dict) -> str:
-            if results["flagged"]:
-                error_str = f'Moderação: A mensagem "{text}" não é apropriada. Tente novamente com outra mensagem.'
-                return error_str
-            return ""
+    def __init__(self, openai_api_key):
+        super().__init__(openai_api_key=openai_api_key)
+
+    def _moderate(self, text: str, results: dict) -> str:
+        if results["flagged"]:
+            error_str = f'Moderação: A mensagem "{text}" não é apropriada. Tente novamente com outra mensagem.'
+            return error_str
+        return ""
 
 def nivel_criatividade(x):
     dicionario = {
@@ -126,8 +136,10 @@ def main():
 
     st.header("💬 Assistente Virtual")
 
-    openai_api_key = st.sidebar.text_input('Chave da API OpenAI', type = 'password')
-    pinecone_key = st.sidebar.text_input('Chave do Pinecone', type = 'password')
+    openai_api_key = st.sidebar.text_input('Chave da API OpenAI', type = 'password', value="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")
+    pinecone_key = st.sidebar.text_input('Chave do Pinecone', type = 'password', value="2e0ed33f-e56f-4aa4-abc4-94394f3a5496")
+    #openai_api_key = "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"
+    #pinecone_key = "2e0ed33f-e56f-4aa4-abc4-94394f3a5496"
 
     tokens_utilizados = 0
     custo_estimado = 0
@@ -281,7 +293,8 @@ def main():
                     """
             #Gerar a resposta
             if prompt:
-                custom_moderation = CustomModeration()
+                #custom_moderation = CustomModeration()
+                custom_moderation = CustomModeration(openai_api_key=openai_api_key)
                 moderation = custom_moderation.run(prompt)
 
                 if moderation == '':

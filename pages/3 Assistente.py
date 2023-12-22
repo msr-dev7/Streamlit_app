@@ -225,7 +225,7 @@ def main():
                 
                 #st.markdown(pages[0])
 
-                embeddings = OpenAIEmbeddings()
+                embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
 
                 pinecone.init(api_key=pinecone_key,
                               environment="gcp-starter")

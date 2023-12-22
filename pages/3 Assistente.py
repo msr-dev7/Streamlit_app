@@ -126,10 +126,8 @@ def main():
 
     st.header("💬 Assistente Virtual")
 
-    openai_api_key = st.sidebar.text_input('Chave da API OpenAI', type = 'password', value="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")
-    pinecone_key = st.sidebar.text_input('Chave do Pinecone', type = 'password', value="2e0ed33f-e56f-4aa4-abc4-94394f3a5496")
-    #openai_api_key = "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"
-    #pinecone_key = "2e0ed33f-e56f-4aa4-abc4-94394f3a5496"
+    openai_api_key = st.sidebar.text_input('Chave da API OpenAI', type = 'password')
+    pinecone_key = st.sidebar.text_input('Chave do Pinecone', type = 'password')
 
     tokens_utilizados = 0
     custo_estimado = 0

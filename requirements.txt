@@ -86,7 +86,7 @@ openpyxl==3.1.2
 orjson==3.9.10
 ortools==9.8.3296
 packaging==23.2
-pandas==1.5.3
+pandas>=2.0.0
 pandas-stubs==2.1.4.231218
 parso==0.8.3
 patsy==0.5.4

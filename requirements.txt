@@ -9,4 +9,3 @@ pypdf==3.17.3
 SpeechRecognition==3.10.1
 gTTS==2.5.0
 pycaret==3.2.0
-pandas==1.5.3

@@ -28,9 +28,9 @@ características e dados pessoais, treinado com uma vasta gama de informações 
 
 **- Chatbot com um assistente que conversará sobre a história do Brasil** 
 
-Para realizar apenas uma simples conversa com o assistente, o usuário deve informar apenas a chave da API OpenAI.
+Para realizar apenas uma conversa simples com o assistente o usuário deve informar apenas a chave da API OpenAI.
 
-Para utilizar o conhecimento de um arquivo PDF, o usuário deve informar a chave da API OpenAI, a chave do Pinecone e um arquivo PDF com dados mais recentes da história do Brasil.
+Para utilizar o conhecimento de um arquivo PDF o usuário deve informar a chave da API OpenAI, a chave do Pinecone e um arquivo PDF com dados mais recentes da história do Brasil.
 Como sugestão temos o [PDF Retrospectiva de 2023](https://drive.google.com/file/d/117PS69h2xIQ1K7S0x8JIoy0ABKioJwy2/view?usp=sharing), que foi extraído do site [Startupi](https://startupi.com.br/retrospectiva-2023/).
 
 É possível ainda configurar diretamente no aplicativo o nível de criatividade, o tamanho e o estilo das respostas do assistente virtual. 

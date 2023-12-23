@@ -18,12 +18,6 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
-#class CustomModeration(OpenAIModerationChain):
-#        def _moderate(self, text: str, results: dict) -> str:
-#            if results["flagged"]:
-#                error_str = f'Moderação: A mensagem "{text}" não é apropriada. Tente novamente com outra mensagem.'
-#                return error_str
-#            return ""
 
 class CustomModeration(OpenAIModerationChain):
     def __init__(self, openai_api_key):
@@ -216,70 +210,81 @@ with st.spinner("Processando"):
         llm = OpenAI(api_key=openai_api_key,temperature=temperatura)
         index_name = ""
         if uploaded_file is not None and prompt:
-            with open("file.pdf", "wb") as f:
-                f.write(uploaded_file.getvalue())
-                file_name = uploaded_file.name
-            # Carregar o arquivo PDF
-            loader = PyPDFLoader("file.pdf")
-            pages = loader.load_and_split()
-            os.remove("file.pdf")
+            if pinecone_key:
+                with open("file.pdf", "wb") as f:
+                    f.write(uploaded_file.getvalue())
+                    file_name = uploaded_file.name
+                # Carregar o arquivo PDF
+                loader = PyPDFLoader("file.pdf")
+                pages = loader.load_and_split()
+                os.remove("file.pdf")
+                
+                if st.session_state.pdf_file_name != file_name:
+                    
+                    st.session_state.pdf_file_name = file_name
+
+                    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+
+                    pinecone.init(api_key=pinecone_key,
+                                  environment="gcp-starter")
+                    index_name = "vector-database"
+                    if index_name not in pinecone.list_indexes():
+                        # we create a new index
+                        pinecone.create_index(
+                            name=index_name,
+                            metric='cosine',
+                            dimension=1536  # 1536 dim of text-embedding-ada-002
+                        )
+                        st.session_state.pine = Pinecone.from_documents(pages, embeddings, index_name = index_name)
+                        # wait a moment for the index to be fully initialized
+                        time.sleep(20) 
+                    else:
+                        st.session_state.pine = Pinecone.from_documents(pages, embeddings, index_name = index_name)
             
-            if st.session_state.pdf_file_name != file_name:                
-                st.session_state.pdf_file_name = file_name
+                busca = st.session_state.pine.similarity_search(prompt, k = 3)
+                conteudo_pagina = []
+                num_resultados = len(busca)
 
-                embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
-
-                pinecone.init(api_key=pinecone_key,
-                              environment="gcp-starter")
-                index_name = "vector-database"
-                if index_name not in pinecone.list_indexes():
-                    # we create a new index
-                    pinecone.create_index(
-                        name=index_name,
-                        metric='cosine',
-                        dimension=1536  # 1536 dim of text-embedding-ada-002
-                    )
-                    st.session_state.pine = Pinecone.from_documents(pages, embeddings, index_name = index_name)
-                    # wait a moment for the index to be fully initialized
-                    time.sleep(20) 
+                if num_resultados > 0:
+                    for i in range(num_resultados):
+                        page_content = busca[i].page_content.replace('\n', ' ')
+                        conteudo_pagina.append(page_content)
                 else:
-                    st.session_state.pine = Pinecone.from_documents(pages, embeddings, index_name = index_name)
-        
-            busca = st.session_state.pine.similarity_search(prompt, k = 3)
-            conteudo_pagina = []
-            num_resultados = len(busca)
+                    st.warning('Nenhum resultado encontrado no arquivo ou não houve tempo suficiente para indexar o arquivo.\nA pergunta será respondida sem levar o arquivo em consideração, mas você pode tentar perguntar novamente depois.')
 
-            if num_resultados > 0:
-                for i in range(num_resultados):
-                    page_content = busca[i].page_content.replace('\n', ' ')
-                    conteudo_pagina.append(page_content)
+                #qa = RetrievalQA.from_chain_type(
+                #    llm=llm,
+                #    chain_type="stuff",
+                #    retriever=pine.as_retriever()
+                #)
+
+                prompt_final = f"""
+                Responda com um estilo {estilo}: {estilo_selecionado}
+                Responda com no máximo {tamanho} tokens sem perder o sentido da resposta.
+                Elabore bem as respostas mas não fuja do tema da pergunta do usuário.
+
+                Responda a pergunta do usuário considerando o conhecimento a seguir.
+
+                """
+
+                # Adicionando o conteúdo das páginas ao prompt final
+                for i, content in enumerate(conteudo_pagina):
+                    prompt_final += f"{content}\n\n"
+
+                # Adicionando informações adicionais ao prompt final
+                prompt_final += f"---\nA pergunta do usuário é: {prompt}\n"
+
+                #st.markdown('Resposta baseada no arquivo')
+                #st.markdown(f'Resposta usando RetrievalQA: {qa.run(prompt)}')
             else:
-                st.warning('Nenhum resultado encontrado no arquivo ou não houve tempo suficiente para indexar o arquivo.\nA pergunta será respondida sem levar o arquivo em consideração, mas você pode tentar perguntar novamente depois.')
+                st.warning("A chave do Pinecone não foi informada, a conversa não utilizará o arquivo pdf como base de conhecimento.")
+                prompt_final = f"""
+                Contexto: {st.session_state.mensagens}
+                Responda com um estilo {estilo}: {estilo_selecionado}
+                Responda com no máximo {tamanho} tokens sem perder o sentido da resposta.
+                Pergunta: {prompt}
 
-            #qa = RetrievalQA.from_chain_type(
-            #    llm=llm,
-            #    chain_type="stuff",
-            #    retriever=pine.as_retriever()
-            #)
-
-            prompt_final = f"""
-            Responda com um estilo {estilo}: {estilo_selecionado}
-            Responda com no máximo {tamanho} tokens sem perder o sentido da resposta.
-            Elabore bem as respostas mas não fuja do tema da pergunta do usuário.
-
-            Responda a pergunta do usuário considerando o conhecimento a seguir.
-
-            """
-
-            # Adicionando o conteúdo das páginas ao prompt final
-            for i, content in enumerate(conteudo_pagina):
-                prompt_final += f"{content}\n\n"
-
-            # Adicionando informações adicionais ao prompt final
-            prompt_final += f"---\nA pergunta do usuário é: {prompt}\n"
-
-            #st.markdown('Resposta baseada no arquivo')
-            #st.markdown(f'Resposta usando RetrievalQA: {qa.run(prompt)}')
+                """
         else:
             if prompt:    
                 #st.markdown('Resposta baseada no chat')

@@ -224,9 +224,7 @@ with st.spinner("Processando"):
             pages = loader.load_and_split()
             os.remove("file.pdf")
             
-            if st.session_state.pdf_file_name != file_name:
-                st.markdown("entrou no if pages_anterior != pages")
-                
+            if st.session_state.pdf_file_name != file_name:                
                 st.session_state.pdf_file_name = file_name
 
                 embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)

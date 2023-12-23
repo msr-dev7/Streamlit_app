@@ -42,7 +42,7 @@ if openai_api_key:
     # Botão para iniciar a interação por voz
     c0,_,c1 = st.columns(3)
     with c0:
-        inicio = st.button("Iniciar Interacao por Voz")
+        inicio = st.button("Iniciar Interação por Voz")
     with c1:
         stop_button = st.button("Encerrar Conversa", key="encerrar_conversa")            
 

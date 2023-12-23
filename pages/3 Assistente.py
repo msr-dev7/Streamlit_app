@@ -224,8 +224,6 @@ with st.spinner("Processando"):
             pages = loader.load_and_split()
             os.remove("file.pdf")
             
-            st.markdown(f"st.session_state.pdf_file_name = {st.session_state.pdf_file_name}")
-            st.markdown(f"file_name = {file_name}")
             if st.session_state.pdf_file_name != file_name:
                 st.markdown("entrou no if pages_anterior != pages")
                 

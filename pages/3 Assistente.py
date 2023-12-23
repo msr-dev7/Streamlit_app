@@ -239,7 +239,7 @@ def main():
                     )
                     pine = Pinecone.from_documents(pages, embeddings, index_name = index_name)
                     # wait a moment for the index to be fully initialized
-                    time.sleep(10) 
+                    time.sleep(15) 
                 else:
                     pine = Pinecone.from_documents(pages, embeddings, index_name = index_name)
         
@@ -261,7 +261,6 @@ def main():
                 #)
 
                 prompt_final = f"""
-                Contexto: {st.session_state.mensagens}
                 Responda com um estilo {estilo}: {estilo_selecionado}
                 Responda com no máximo {tamanho} tokens sem perder o sentido da resposta.
                 Elabore bem as respostas mas não fuja do tema da pergunta do usuário.

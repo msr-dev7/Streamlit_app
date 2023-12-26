@@ -129,8 +129,10 @@ st.set_page_config(
 
 st.header("💬 Assistente Virtual")
 
-openai_api_key = st.sidebar.text_input('Chave da API OpenAI', type = 'password')
-pinecone_key = st.sidebar.text_input('Chave do Pinecone', type = 'password')
+#openai_api_key = st.sidebar.text_input('Chave da API OpenAI', type = 'password')
+#pinecone_key = st.sidebar.text_input('Chave do Pinecone', type = 'password')
+openai_api_key = st.secrets["my_secret"]["OPENAI_API_KEY"]
+pinecone_key = st.secrets["my_secret"]["PINECONE_API_KEY"]
 if 'pdf_file_name' not in st.session_state:
     st.session_state.pdf_file_name = None
 tokens_utilizados = 0

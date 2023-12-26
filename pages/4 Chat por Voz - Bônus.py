@@ -4,8 +4,8 @@ from langchain.llms import OpenAI
 from gtts import gTTS
 import os
 
-openai_api_key = st.sidebar.text_input('Chave da API OpenAI', type = 'password')
-
+#openai_api_key = st.sidebar.text_input('Chave da API OpenAI', type = 'password')
+openai_api_key = st.secrets["my_secret"]["OPENAI_API_KEY"]
 if openai_api_key:
     llm = OpenAI(api_key=openai_api_key, temperature = 0)
     # Função para reconhecimento de fala

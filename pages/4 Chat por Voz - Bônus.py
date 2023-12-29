@@ -44,6 +44,7 @@ if openai_api_key:
     st.header("Chat por Voz")
     st.markdown("""
     Não conseguimos habilitar o microfone, segue **[Código do Chat por Voz com microfone local](https://startupi.com.br/retrospectiva-2023/)** 
+    
     Segue versão utilizando o streamlit_webrtc, **[publicado aqui](https://chatvoz-3weauazvbnktgqiceje6r9.streamlit.app/)**, mas até onde avançamos a usabilidade não ficou legal.""")
     c0,_,c1 = st.columns(3)
     

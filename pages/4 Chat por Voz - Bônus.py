@@ -45,7 +45,7 @@ if openai_api_key:
     st.markdown("""
     Na versão inicial não conseguimos habilitar o microfone, segue **[Código do Chat por Voz com microfone local](https://drive.google.com/drive/folders/1GnYlavzy7NBetLSA71Sx0xzYHEb1kEWM)** 
     
-    Em outra tentativa fizemos com streamlit_webrtc, e conseguimos habilitar o microfone do navegador porém a usabilidade não ficou legal, **[versão publicado aqui](https://chatvoz-3weauazvbnktgqiceje6r9.streamlit.app/)**""")
+    Em outra tentativa fizemos com streamlit_webrtc, conseguimos habilitar o microfone do navegador, mas a usabilidade não ficou legal, **[versão publicado aqui](https://chatvoz-3weauazvbnktgqiceje6r9.streamlit.app/)**""")
     c0,_,c1 = st.columns(3)
     
     with c0:

@@ -5,6 +5,10 @@ from langchain.chains import ConversationChain
 from gtts import gTTS
 import os
 openai_api_key = st.secrets["my_secret"]["OPENAI_API_KEY"]
+
+st.markdown("""
+**Não conseguimos habilitar o microfone, segue [Código do Chat por Voz](https://startupi.com.br/retrospectiva-2023/)** 
+""")
 if openai_api_key:
     chat = ChatOpenAI(api_key=openai_api_key)
 

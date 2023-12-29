@@ -4,7 +4,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationChain
 from gtts import gTTS
 import os
-
+openai_api_key = st.secrets["my_secret"]["OPENAI_API_KEY"]
 if openai_api_key:
     chat = ChatOpenAI(api_key=openai_api_key)
 

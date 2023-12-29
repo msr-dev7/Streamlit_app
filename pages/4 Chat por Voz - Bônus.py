@@ -6,9 +6,6 @@ from gtts import gTTS
 import os
 openai_api_key = st.secrets["my_secret"]["OPENAI_API_KEY"]
 
-st.markdown("""
-**Não conseguimos habilitar o microfone, segue [Código do Chat por Voz](https://startupi.com.br/retrospectiva-2023/)** 
-""")
 if openai_api_key:
     chat = ChatOpenAI(api_key=openai_api_key)
 
@@ -45,7 +42,9 @@ if openai_api_key:
 
     # Interface do Streamlit
     st.header("Chat por Voz")
-
+    st.markdown("""
+    **Não conseguimos habilitar o microfone, segue [Código do Chat por Voz](https://startupi.com.br/retrospectiva-2023/)** 
+    Tentamos utilizar o streamlit_webrtc, mas até onde fizemos só permitia uma pergunta por vez e a usabilidade ficou ruim.""")
     c0,_,c1 = st.columns(3)
     
     with c0:
